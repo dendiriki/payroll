@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
         $table->id();
-        $table->unsignedBigInteger('user_id')->nullable(); // relasi ke users
+        $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
         $table->string('nama_lengkap');
         $table->string('tempat_lahir');
         $table->date('tanggal_lahir');

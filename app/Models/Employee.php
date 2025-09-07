@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
-        protected $fillable = [
+    protected $fillable = [
         'user_id',
         'nama_lengkap',
         'tempat_lahir',
@@ -14,9 +14,16 @@ class Employee extends Model
         'jenis_kelamin',
         'jabatan',
         'status',
+        'join_date',
         'gaji_pokok',
         'tunjangan',
         'bpjs',
+    ];
+
+    protected $casts = [
+        'tanggal_lahir' => 'date',
+        'join_date' => 'date',
+        'bpjs' => 'boolean',
     ];
 
     public function user()
@@ -28,4 +35,17 @@ class Employee extends Model
     {
         return $this->hasMany(Payroll::class);
     }
+
+
+    public function getInsentifAttribute()
+    {
+        if ($this->status !== 'Tetap' || !$this->join_date) {
+            return 0;
+        }
+
+        $years = now()->diffInYears(\Carbon\Carbon::parse($this->join_date));
+
+        return 1000000 + ($years * 100000);
+    }
+
 }

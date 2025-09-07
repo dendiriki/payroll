@@ -6,14 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\Employee;
 use App\Models\User;
 
-
 class KaryawanController extends Controller
 {
-// Menampilkan daftar karyawan
-     // Tampilkan daftar employee
+    // Menampilkan daftar karyawan
     public function index()
     {
-        // ambil dengan relasi user supaya bisa tampilkan email/name dari users (jika ada)
         $karyawans = Employee::with('user')->orderBy('nama_lengkap')->get();
         return view('karyawan.index', compact('karyawans'));
     }
@@ -21,7 +18,6 @@ class KaryawanController extends Controller
     // Form tambah employee
     public function create()
     {
-        // Ambil user yang berrole karyawan dan belum punya employee record
         $usedUserIds = Employee::whereNotNull('user_id')->pluck('user_id')->toArray();
         $users = User::where('role', 'karyawan')
                      ->whereNotIn('id', $usedUserIds)
@@ -41,6 +37,7 @@ class KaryawanController extends Controller
             'jenis_kelamin' => 'nullable|in:L,P',
             'jabatan'       => 'nullable|string|max:255',
             'status'        => 'required|in:Tetap,Kontrak,HL',
+            'join_date'     => 'required|date', // ✅ Tambah validasi
             'gaji_pokok'    => 'required|numeric',
             'tunjangan'     => 'nullable|numeric',
             'bpjs'          => 'nullable|boolean',
@@ -54,6 +51,7 @@ class KaryawanController extends Controller
             'jenis_kelamin' => $request->jenis_kelamin,
             'jabatan'       => $request->jabatan,
             'status'        => $request->status,
+            'join_date'     => $request->join_date, // ✅ Simpan
             'gaji_pokok'    => $request->gaji_pokok,
             'tunjangan'     => $request->tunjangan ?? 0,
             'bpjs'          => $request->has('bpjs') ? 1 : 0,
@@ -74,8 +72,11 @@ class KaryawanController extends Controller
     {
         $karyawan = Employee::findOrFail($id);
 
-        // Untuk pilihan user: semua karyawan + current user (agar seleksi tidak hilang)
-        $usedUserIds = Employee::whereNotNull('user_id')->where('id', '!=', $id)->pluck('user_id')->toArray();
+        $usedUserIds = Employee::whereNotNull('user_id')
+                               ->where('id', '!=', $id)
+                               ->pluck('user_id')
+                               ->toArray();
+
         $users = User::where('role', 'karyawan')
                      ->whereNotIn('id', $usedUserIds)
                      ->get();
@@ -89,13 +90,14 @@ class KaryawanController extends Controller
         $karyawan = Employee::findOrFail($id);
 
         $request->validate([
-            'user_id' => 'required|exists:users,id|unique:employees,user_id,'.$id,
+            'user_id'       => 'required|exists:users,id|unique:employees,user_id,'.$id,
             'nama_lengkap'  => 'required|string|max:255',
             'tempat_lahir'  => 'nullable|string|max:255',
             'tanggal_lahir' => 'nullable|date',
             'jenis_kelamin' => 'nullable|in:L,P',
             'jabatan'       => 'nullable|string|max:255',
             'status'        => 'required|in:Tetap,Kontrak,HL',
+            'join_date'     => 'required|date', // ✅ Validasi update
             'gaji_pokok'    => 'required|numeric',
             'tunjangan'     => 'nullable|numeric',
             'bpjs'          => 'nullable|boolean',
@@ -109,6 +111,7 @@ class KaryawanController extends Controller
             'jenis_kelamin' => $request->jenis_kelamin,
             'jabatan'       => $request->jabatan,
             'status'        => $request->status,
+            'join_date'     => $request->join_date, // ✅ Update
             'gaji_pokok'    => $request->gaji_pokok,
             'tunjangan'     => $request->tunjangan ?? 0,
             'bpjs'          => $request->has('bpjs') ? 1 : 0,

@@ -20,7 +20,9 @@
             <select name="user_id" class="form-control" required>
                 <option value="">-- Pilih user --</option>
                 @foreach($users as $u)
-                    <option value="{{ $u->id }}">{{ $u->name }} ({{ $u->email }})</option>
+                    <option value="{{ $u->id }}" {{ old('user_id') == $u->id ? 'selected' : '' }}>
+                        {{ $u->name }} ({{ $u->email }})
+                    </option>
                 @endforeach
             </select>
             <small class="text-muted">Harap isi user yang sudah di register.</small>
@@ -55,13 +57,19 @@
             <input type="text" name="jabatan" class="form-control" value="{{ old('jabatan') }}">
         </div>
 
-        <div class="mb-3">
-            <label>Status</label>
-            <select name="status" class="form-control" required>
-                <option value="Tetap">Tetap</option>
-                <option value="Kontrak">Kontrak</option>
-                <option value="HL">HL</option>
-            </select>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label>Status</label>
+                <select name="status" class="form-control" required>
+                    <option value="Tetap" {{ old('status')=='Tetap'?'selected':'' }}>Tetap</option>
+                    <option value="Kontrak" {{ old('status')=='Kontrak'?'selected':'' }}>Kontrak</option>
+                    <option value="HL" {{ old('status')=='HL'?'selected':'' }}>HL</option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label>Tanggal Bergabung</label> <!-- ✅ join_date -->
+                <input type="date" name="join_date" class="form-control" value="{{ old('join_date') }}" required>
+            </div>
         </div>
 
         <div class="row">

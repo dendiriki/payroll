@@ -11,22 +11,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('employees', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
-        $table->string('nama_lengkap');
-        $table->string('tempat_lahir');
-        $table->date('tanggal_lahir');
-        $table->enum('jenis_kelamin', ['L', 'P']);
-        $table->string('jabatan');
-        $table->enum('status', ['Tetap', 'Kontrak', 'HL']);
-        $table->decimal('gaji_pokok', 15, 2);
-        $table->decimal('tunjangan', 15, 2)->default(0);
-        $table->boolean('bpjs')->default(false);
-        $table->timestamps();
+    Schema::create('employees', function (Blueprint $table) {
+                $table->id();
+                
+                // Relasi ke users (nullable, kalau user dihapus maka user_id jadi null)
+                $table->foreignId('user_id')
+                    ->nullable()
+                    ->constrained('users')
+                    ->nullOnDelete();
 
-        $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-    });
+                $table->string('nama_lengkap');
+                $table->string('tempat_lahir');
+                $table->date('tanggal_lahir');
+                $table->enum('jenis_kelamin', ['L', 'P']);
+                $table->string('jabatan');
+                $table->enum('status', ['Tetap', 'Kontrak', 'HL']);
+                $table->date('join_date'); 
+                $table->decimal('gaji_pokok', 15, 2);
+                $table->decimal('tunjangan', 15, 2)->default(0);
+                $table->boolean('bpjs')->default(false);
+                $table->timestamps();
+            });
     }
 
     /**

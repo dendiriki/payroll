@@ -30,17 +30,20 @@
 
         <div class="mb-3">
             <label>Nama Lengkap</label>
-            <input type="text" name="nama_lengkap" class="form-control" value="{{ old('nama_lengkap', $karyawan->nama_lengkap) }}" required>
+            <input type="text" name="nama_lengkap" class="form-control" 
+                value="{{ old('nama_lengkap', $karyawan->nama_lengkap) }}" required>
         </div>
 
         <div class="row">
             <div class="col-md-4 mb-3">
                 <label>Tempat Lahir</label>
-                <input type="text" name="tempat_lahir" class="form-control" value="{{ old('tempat_lahir', $karyawan->tempat_lahir) }}">
+                <input type="text" name="tempat_lahir" class="form-control" 
+                    value="{{ old('tempat_lahir', $karyawan->tempat_lahir) }}">
             </div>
             <div class="col-md-4 mb-3">
                 <label>Tanggal Lahir</label>
-                <input type="date" name="tanggal_lahir" class="form-control" value="{{ old('tanggal_lahir', $karyawan->tanggal_lahir ? $karyawan->tanggal_lahir->format('Y-m-d') : '') }}">
+                <input type="date" name="tanggal_lahir" class="form-control" 
+                    value="{{ old('tanggal_lahir', $karyawan->tanggal_lahir ? $karyawan->tanggal_lahir->format('Y-m-d') : '') }}">
             </div>
             <div class="col-md-4 mb-3">
                 <label>Jenis Kelamin</label>
@@ -54,7 +57,8 @@
 
         <div class="mb-3">
             <label>Jabatan</label>
-            <input type="text" name="jabatan" class="form-control" value="{{ old('jabatan', $karyawan->jabatan) }}">
+            <input type="text" name="jabatan" class="form-control" 
+                value="{{ old('jabatan', $karyawan->jabatan) }}">
         </div>
 
         <div class="mb-3">
@@ -69,16 +73,25 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label>Gaji Pokok</label>
-                <input type="number" name="gaji_pokok" class="form-control" value="{{ old('gaji_pokok', $karyawan->gaji_pokok) }}" required>
+                <input type="number" name="gaji_pokok" class="form-control" 
+                    value="{{ old('gaji_pokok', $karyawan->gaji_pokok) }}" required>
             </div>
             <div class="col-md-6 mb-3">
                 <label>Tunjangan</label>
-                <input type="number" name="tunjangan" class="form-control" value="{{ old('tunjangan', $karyawan->tunjangan) }}">
+                <input type="number" name="tunjangan" class="form-control" 
+                    value="{{ old('tunjangan', $karyawan->tunjangan) }}">
             </div>
         </div>
 
+        <div class="mb-3">
+            <label>Tanggal Bergabung</label>
+            <input type="date" name="join_date" class="form-control" 
+                value="{{ old('join_date', $karyawan->join_date ? $karyawan->join_date->format('Y-m-d') : '') }}" required>
+        </div>
+
         <div class="form-check mb-3">
-            <input type="checkbox" name="bpjs" value="1" class="form-check-input" id="bpjs" {{ old('bpjs', $karyawan->bpjs) ? 'checked' : '' }}>
+            <input type="checkbox" name="bpjs" value="1" class="form-check-input" id="bpjs" 
+                {{ old('bpjs', $karyawan->bpjs) ? 'checked' : '' }}>
             <label class="form-check-label" for="bpjs">Dapat potongan BPJS</label>
         </div>
 

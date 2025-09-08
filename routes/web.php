@@ -30,7 +30,7 @@ Route::middleware(['auth', 'role:supervisor,staff'])->prefix('karyawan')->name('
 });
 
 // --- Payroll ---
-Route::middleware(['auth','role:supervisor,staff'])
+Route::middleware(['auth','role:supervisor,staff,karyawan'])
     ->prefix('payroll')
     ->name('payroll.')
     ->group(function () {
@@ -41,11 +41,20 @@ Route::middleware(['auth','role:supervisor,staff'])
         // ✅ Generate Payroll (POST)
         Route::post('/generate', [PayrollController::class, 'generate'])->name('generate');
         Route::post('/pdf/all', [PayrollController::class, 'pdfAll'])->name('pdfAll');
+        // ✅ Tambahkan ini untuk slip per karyawan (PDF)
+        Route::get('/{id}/pdf', [PayrollController::class, 'pdf'])->name('pdf');
         // ✅ Approve Payroll (khusus supervisor)
         Route::put('/{id}/approve', [PayrollController::class, 'approve'])
             ->name('approve')
             ->middleware('role:supervisor');
     });
+
+    // Hanya karyawan yang bisa akses slip gaji
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/slip-gaji', [App\Http\Controllers\PayrollController::class, 'mySlip'])
+            ->name('payroll.myslip');
+    });
+
 
 // --- API Presensi (dummy pakai file json) ---
 Route::prefix('api')->group(function () {
@@ -162,6 +171,42 @@ Route::prefix('api')->group(function () {
         ],
             [
                 "karyawan_id" => 5,
+                "periode"     => "2025-09",
+                "presensi"    => [
+                        [ "tanggal" => "2025-09-01", "jam_masuk" => "08:10", "jam_keluar" => "17:10" ],
+                [ "tanggal" => "2025-09-02", "jam_masuk" => null,    "jam_keluar" => null ],
+                [ "tanggal" => "2025-09-03", "jam_masuk" => "08:20", "jam_keluar" => "17:00" ],
+                [ "tanggal" => "2025-09-04", "jam_masuk" => "08:00", "jam_keluar" => "19:30" ],
+                [ "tanggal" => "2025-09-05", "jam_masuk" => "08:05", "jam_keluar" => "17:15" ],
+                [ "tanggal" => "2025-09-06", "jam_masuk" => "08:25", "jam_keluar" => "17:10" ],
+                [ "tanggal" => "2025-09-07", "jam_masuk" => null,    "jam_keluar" => null ],
+                [ "tanggal" => "2025-09-08", "jam_masuk" => "07:55", "jam_keluar" => "17:00" ],
+                [ "tanggal" => "2025-09-09", "jam_masuk" => "08:15", "jam_keluar" => "17:20" ],
+                [ "tanggal" => "2025-09-10", "jam_masuk" => "08:00", "jam_keluar" => "21:00" ],
+                [ "tanggal" => "2025-09-11", "jam_masuk" => null,    "jam_keluar" => null ],
+                [ "tanggal" => "2025-09-12", "jam_masuk" => "08:12", "jam_keluar" => "17:05" ],
+                [ "tanggal" => "2025-09-13", "jam_masuk" => "08:25", "jam_keluar" => "17:40" ],
+                [ "tanggal" => "2025-09-14", "jam_masuk" => null,    "jam_keluar" => null ],
+                [ "tanggal" => "2025-09-15", "jam_masuk" => "07:50", "jam_keluar" => "17:20" ],
+                [ "tanggal" => "2025-09-16", "jam_masuk" => "08:05", "jam_keluar" => "20:30" ],
+                [ "tanggal" => "2025-09-17", "jam_masuk" => "08:10", "jam_keluar" => "17:00" ],
+                [ "tanggal" => "2025-09-18", "jam_masuk" => "08:00", "jam_keluar" => "17:15" ],
+                [ "tanggal" => "2025-09-19", "jam_masuk" => "08:30", "jam_keluar" => "17:45" ],
+                [ "tanggal" => "2025-09-20", "jam_masuk" => "08:40", "jam_keluar" => "17:00" ],
+                [ "tanggal" => "2025-09-21", "jam_masuk" => null,    "jam_keluar" => null ],
+                [ "tanggal" => "2025-09-22", "jam_masuk" => "08:05", "jam_keluar" => "17:10" ],
+                [ "tanggal" => "2025-09-23", "jam_masuk" => "08:15", "jam_keluar" => "20:00" ],
+                [ "tanggal" => "2025-09-24", "jam_masuk" => "08:00", "jam_keluar" => "17:00" ],
+                [ "tanggal" => "2025-09-25", "jam_masuk" => "08:05", "jam_keluar" => "17:05" ],
+                [ "tanggal" => "2025-09-26", "jam_masuk" => "08:25", "jam_keluar" => "17:20" ],
+                [ "tanggal" => "2025-09-27", "jam_masuk" => "08:30", "jam_keluar" => "17:00" ],
+                [ "tanggal" => "2025-09-28", "jam_masuk" => null,    "jam_keluar" => null ],
+                [ "tanggal" => "2025-09-29", "jam_masuk" => "08:00", "jam_keluar" => "17:15" ],
+                [ "tanggal" => "2025-09-30", "jam_masuk" => "08:10", "jam_keluar" => "20:30" ]
+                ],
+            ],
+                [
+                "karyawan_id" => 6,
                 "periode"     => "2025-09",
                 "presensi"    => [
                         [ "tanggal" => "2025-09-01", "jam_masuk" => "08:10", "jam_keluar" => "17:10" ],

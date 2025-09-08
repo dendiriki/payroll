@@ -236,4 +236,34 @@ class PayrollController extends Controller
         return $pdf->stream("Payroll-All.pdf");
     }
 
+    public function mySlip()
+    {
+        $user = auth()->user();
+
+        // Ambil payroll berdasarkan relasi employee_id
+        $payrolls = \App\Models\Payroll::with('employee')
+            ->where('employee_id', $user->employee->id) // pastikan relasi user → employee ada
+            ->orderBy('periode', 'desc')
+            ->get();
+
+        return view('payroll.myslip', compact('payrolls'));
+    }
+
+    public function pdf($id)
+    {
+        $payroll = \App\Models\Payroll::with('employee')->findOrFail($id);
+
+        // pastikan karyawan hanya bisa unduh slip gajinya sendiri
+        $user = auth()->user();
+        if ($user->role === 'karyawan' && $payroll->employee_id !== $user->employee->id) {
+            abort(403, 'Anda tidak berhak mengakses slip gaji ini.');
+        }
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('payroll.pdf_single', compact('payroll'))
+                ->setPaper('A4', 'portrait');
+
+        return $pdf->stream("Slip-Gaji-{$payroll->employee->nama_lengkap}-{$payroll->periode}.pdf");
+    }
+
+
 }

@@ -24,11 +24,6 @@
                                 📊 Laporan Payroll
                             </a>
                         </div>
-                        <div class="col-md-4">
-                            <a href="#" class="btn btn-outline-secondary w-100 py-3 shadow-sm">
-                                ⚙️ Pengaturan Sistem
-                            </a>
-                        </div>
                     </div>
                 </div>
             @elseif($user->role === 'karyawan')
@@ -36,14 +31,9 @@
                     <h5 class="mb-3">📌 Menu Karyawan</h5>
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <a href="#" class="btn btn-outline-success w-100 py-3 shadow-sm">
+                          <a href="{{ route('payroll.myslip') }}" class="btn btn-outline-success w-100 py-3 shadow-sm">
                                 💰 Lihat Slip Gaji
-                            </a>
-                        </div>
-                        <div class="col-md-6">
-                            <a href="#" class="btn btn-outline-warning w-100 py-3 shadow-sm">
-                                ✏️ Update Data Pribadi
-                            </a>
+                          </a>
                         </div>
                     </div>
                 </div>
